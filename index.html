@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สื่อการเรียนรู้เรื่อง อุณหภูมิและการวัดอุณหภูมิ ม.1</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #f0f4f8;
+        }
+        /* Glassmorphism effects */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+        }
+        /* Custom range slider styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 10px;
+            cursor: pointer;
+            background: #e2e8f0;
+            border-radius: 5px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -7px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            transition: transform 0.1s ease;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+        /* Thermometer glass style */
+        .thermometer-glass {
+            background: linear-gradient(90deg, rgba(255,255,255,0.6) 0%, rgba(240,240,255,0.2) 50%, rgba(200,200,220,0.5) 100%);
+            border: 3px solid #cbd5e1;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- Header / Navbar -->
+    <header class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-white/10 rounded-lg">
+                    <i class="fa-solid font-bold fa-temperature-half text-3xl text-amber-300"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">สื่อการเรียนรู้แบบโต้ตอบ (Interactive Science)</h1>
+                    <p class="text-xs sm:text-sm text-blue-100">เรื่อง อุณหภูมิและการวัดอุณหภูมิ — วิทยาศาสตร์ ม.1</p>
+                </div>
+            </div>
+            <div class="mt-2 sm:mt-0 flex gap-2">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500 text-white shadow">
+                    <i class="fa-solid fa-flask mr-1"></i> ห้องทดลองจำลอง
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full">
+
+        <!-- Objective & Instructions Banner -->
+        <div class="glass-card rounded-2xl p-4 sm:p-6 mb-6 border-l-4 border-blue-500">
+            <div class="flex items-start gap-4">
+                <div class="p-3 bg-blue-100 text-blue-600 rounded-xl hidden sm:block">
+                    <i class="fa-solid fa-lightbulb text-2xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-slate-800 mb-1">วัตถุประสงค์และการทดลอง</h2>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        ให้นักเรียนทดลองปรับ <span class="font-semibold text-blue-600">"อุณหภูมิ"</span> และ <span class="font-semibold text-orange-600">"อัตราการถ่ายโอนพลังงานความร้อน"</span> ผ่าน Slider ด้านล่าง สังเกตการเปลี่ยนแปลงของการเคลื่อนที่ของอนุภาคสาร การเปลี่ยนสถานะ และสังเกตการคำนวณแปลงหน่วยวัดอุณหภูมิในสเกลต่างๆ แบบ Real-time
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Grid Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            <!-- LEFT COLUMN: Control Panel & Thermometer & Calculations (5 Cols) -->
+            <div class="lg:col-span-5 space-y-6">
+
+                <!-- Variable Controls Card -->
+                <div class="glass-card rounded-2xl p-5 border border-slate-200">
+                    <h3 class="text-base font-bold text-slate-800 border-b pb-2 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-blue-500"></i> แผงควบคุมตัวแปร (Controls)
+                    </h3>
+
+                    <!-- Slider 1: Temperature -->
+                    <div class="mb-5">
+                        <div class="flex justify-between items-center mb-1">
+                            <label for="tempSlider" class="text-sm font-semibold text-slate-700">
+                                1. อุณหภูมิ (Temperature)
+                            </label>
+                            <span id="tempValueDisplay" class="text-lg font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200">
+                                25 °C
+                            </span>
+                        </div>
+                        <input type="range" id="tempSlider" min="-20" max="100" value="25" step="1" class="w-full">
+                        <div class="flex justify-between text-xs text-slate-400 mt-1">
+                            <span>-20°C (จุดเยือกแข็งต่ำกว่า 0)</span>
+                            <span>0°C</span>
+                            <span>100°C (จุดเดือด)</span>
+                        </div>
+                    </div>
+
+                    <!-- Slider 2: Thermal Energy / Transfer Rate -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label for="heatSlider" class="text-sm font-semibold text-slate-700">
+                                2. พลังงานความร้อนที่ให้/ดึงออก (Heat Flux)
+                            </label>
+                            <span id="heatValueDisplay" class="text-sm font-bold text-orange-600 bg-orange-50 px-2.5 py-0.5 rounded-md border border-orange-200">
+                                ปกติ (1.0x)
+                            </span>
+                        </div>
+                        <input type="range" id="heatSlider" min="0.2" max="2.5" value="1.0" step="0.1" class="w-full">
+                        <div class="flex justify-between text-xs text-slate-400 mt-1">
+                            <span>ถ่ายโอนช้า (0.2x)</span>
+                            <span>ปกติ (1.0x)</span>
+                            <span>ถ่ายโอนเร็ว (2.5x)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Thermometer & Multi-unit Displays -->
+                <div class="glass-card rounded-2xl p-5 border border-slate-200 flex flex-col sm:flex-row gap-6 items-center">
+                    
+                    <!-- Interactive Visual Thermometer -->
+                    <div class="flex flex-col items-center">
+                        <span class="text-xs font-semibold text-slate-500 mb-2">เทอร์โมมิเตอร์</span>
+                        <div class="relative w-12 h-64 flex justify-center items-end py-3 bg-slate-100 rounded-full border-2 border-slate-300 shadow-inner">
+                            <!-- Glass Tube Outer -->
+                            <div class="w-4 h-48 bg-slate-200/50 rounded-full relative overflow-hidden thermometer-glass flex items-end justify-center">
+                                <!-- Liquid Level -->
+                                <div id="thermoLiquid" class="w-full bg-gradient-to-t from-red-600 to-red-400 rounded-b-full transition-all duration-300 ease-out" style="height: 37.5%;"></div>
+                            </div>
+                            <!-- Bulb at bottom -->
+                            <div id="thermoBulb" class="absolute bottom-1 w-9 h-9 rounded-full bg-red-600 border-2 border-slate-300 shadow-md transition-colors duration-300"></div>
+                        </div>
+                        <span id="thermoLabel" class="text-xs font-bold text-red-600 mt-2">สารทำงาน: แอลกอฮอล์</span>
+                    </div>
+
+                    <!-- Multi-Unit Conversion Grid -->
+                    <div class="flex-1 w-full space-y-2">
+                        <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">ค่าที่วัดได้ในหน่วยต่างๆ</h4>
+                        
+                        <!-- Celsius -->
+                        <div class="flex justify-between items-center p-2 rounded-lg bg-blue-50 border border-blue-100">
+                            <span class="text-xs font-medium text-blue-800">เซลเซียส (°C)</span>
+                            <span id="valC" class="font-bold text-blue-700 text-base">25.0 °C</span>
+                        </div>
+                        <!-- Fahrenheit -->
+                        <div class="flex justify-between items-center p-2 rounded-lg bg-indigo-50 border border-indigo-100">
+                            <span class="text-xs font-medium text-indigo-800">ฟาเรนไฮต์ (°F)</span>
+                            <span id="valF" class="font-bold text-indigo-700 text-base">77.0 °F</span>
+                        </div>
+                        <!-- Kelvin -->
+                        <div class="flex justify-between items-center p-2 rounded-lg bg-purple-50 border border-purple-100">
+                            <span class="text-xs font-medium text-purple-800">เคลวิน (K)</span>
+                            <span id="valK" class="font-bold text-purple-700 text-base">298.15 K</span>
+                        </div>
+                        <!-- Reaumur -->
+                        <div class="flex justify-between items-center p-2 rounded-lg bg-emerald-50 border border-emerald-100">
+                            <span class="text-xs font-medium text-emerald-800">โรเมอร์ (°R)</span>
+                            <span id="valR" class="font-bold text-emerald-700 text-base">20.0 °R</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conversion Formulas Card -->
+                <div class="glass-card rounded-2xl p-4 border border-slate-200 bg-slate-50/80 text-xs space-y-1.5 text-slate-600">
+                    <p class="font-bold text-slate-800 text-sm mb-1"><i class="fa-solid fa-calculator text-indigo-500 mr-1"></i> สูตรแปลงหน่วยอุณหภูมิ:</p>
+                    <div class="grid grid-cols-2 gap-2 text-[11px]">
+                        <div class="bg-white p-1.5 rounded border border-slate-200">°F = (°C × 9/5) + 32</div>
+                        <div class="bg-white p-1.5 rounded border border-slate-200">K = °C + 273.15</div>
+                        <div class="bg-white p-1.5 rounded border border-slate-200">°R = °C × 4/5</div>
+                        <div class="bg-white p-1.5 rounded border border-slate-200">ความสัมพันธ์: C/5 = (F-32)/9 = R/4 = (K-273)/5</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: Simulation Canvas & Analysis (7 Cols) -->
+            <div class="lg:col-span-7 space-y-6">
+
+                <!-- Particle Simulation Card -->
+                <div class="glass-card rounded-2xl p-5 border border-slate-200 relative overflow-hidden flex flex-col h-full">
+                    <div class="flex justify-between items-center mb-3">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-atom text-purple-600 text-lg"></i>
+                            <h3 class="text-base font-bold text-slate-800">การแบบจำลองอนุภาคและการเปลี่ยนสถานะ (Real-time Simulation)</h3>
+                        </div>
+                        <span id="stateBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700 border border-blue-300">
+                            สถานะ: ของเหลว (น้ำ)
+                        </span>
+                    </div>
+
+                    <!-- Canvas container -->
+                    <div class="relative w-full h-72 sm:h-80 bg-slate-900 rounded-xl overflow-hidden shadow-inner border border-slate-700 flex-grow">
+                        <canvas id="particleCanvas" class="w-full h-full block"></canvas>
+
+                        <!-- Canvas overlay info -->
+                        <div class="absolute top-3 left-3 bg-slate-800/80 backdrop-blur-md px-3 py-1.5 rounded-lg text-white text-xs border border-slate-600 space-y-0.5">
+                            <div>ความเร็วอนุภาคเฉลี่ย (EK): <span id="kineticEnergyDisplay" class="font-bold text-amber-400">0.0</span></div>
+                            <div>จำนวนอนุภาค: <span class="font-bold text-cyan-300">80 ตัว</span></div>
+                        </div>
+
+                        <!-- Temperature Gauge Graphic in Canvas -->
+                        <div class="absolute bottom-3 right-3 bg-slate-800/80 backdrop-blur-md p-2 rounded-lg border border-slate-600 flex items-center gap-2">
+                            <i id="flameIcon" class="fa-solid fa-fire text-amber-500 text-xl transition-all duration-300"></i>
+                            <span id="heatStatusText" class="text-xs text-white font-medium">ความร้อนปานกลาง</span>
+                        </div>
+                    </div>
+
+                    <!-- Scientific explanation box -->
+                    <div id="explanationBox" class="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 leading-relaxed">
+                        <span class="font-bold"><i class="fa-solid fa-circle-info mr-1"></i> ข้อสังเกตวิทยาศาสตร์:</span> 
+                        <span id="explanationText">ที่อุณหภูมิห้อง (25°C) อนุภาคของน้ำมีความเร็วปานกลาง เคลื่อนที่ลื่นไหลข้ามกันไปมา แสดงสถานะเป็นของเหลว</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ASSESSMENT SECTION: QUIZ -->
+        <section class="mt-10 mb-8">
+            <div class="glass-card rounded-2xl p-6 border border-slate-200">
+                <div class="flex items-center justify-between border-b pb-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2.5 bg-emerald-100 text-emerald-600 rounded-xl">
+                            <i class="fa-solid fa-clipboard-question text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800">แบบประเมินความรู้ท้ายกิจกรรม (3 ข้อ)</h3>
+                            <p class="text-xs text-slate-500">ทดสอบความเข้าใจเรื่องอุณหภูมิ สเกลวัด และทฤษฎีจลน์ของอนุภาค</p>
+                        </div>
+                    </div>
+                    <div id="quizScoreBadge" class="hidden px-4 py-2 bg-slate-100 rounded-xl text-sm font-bold text-slate-700 border border-slate-300">
+                        คะแนน: <span id="scoreVal" class="text-emerald-600 text-lg">0</span> / 3
+                    </div>
+                </div>
+
+                <!-- Quiz Form -->
+                <div class="space-y-6" id="quizContainer">
+                    
+                    <!-- Question 1 -->
+                    <div class="q-card p-4 rounded-xl bg-slate-50 border border-slate-200" id="q1-box">
+                        <p class="font-semibold text-slate-800 text-sm mb-3">
+                            ข้อที่ 1) เมื่อเพิ่มอุณหภูมิให้กับสาร ผลที่เกิดขึ้นกับอนุภาคภายในสารตามทฤษฎีจลน์คือข้อใด?
+                        </p>
+                        <div class="space-y-2 text-xs sm:text-sm">
+                            <label class="flex items-center p-2.5 rounded-lg bg-white border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition-all">
+                                <input type="radio" name="q1" value="A" class="mr-2.5 text-blue-600">
+                                ก. อนุภาคหยุดการเคลื่อนที่ทั้งหมด
+                            </label>
+                            <label class="flex items-center p-2.5 rounded-lg bg-white border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition-all">
+                                <input type="radio" name="q1" value="B" class="mr-2.5 text-blue-600">
+                                ข. อนุภาคเคลื่อนที่ช้าลงและอยู่ชิดกันมากขึ้น
+                            </label>
+                            <label class="flex items-center p-2.5 rounded-lg bg-white border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition-all">
+                                <input type="radio" name="q1" value="C" class="mr-2.5 text-blue-600">
+                                ค. อนุภาคมีพลังงานจลน์เพิ่มขึ้นและเคลื่อนที่เร็วขึ้น
+                            </label>
+                            <label class="flex items-center p-2.5 rounded-lg bg-white border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition-all">
+                                <input type="radio" name="q1" value="D" class="mr-2.5 text-blue-600">
+                                ง. ขนาดของอนุภาคแต่ละตัวจะขยายใหญ่ขึ้น
+                            </label>
+                        </div>
+                        <div id="q1-feedback" class="mt-3 hidden p-3 rounded-lg text-xs leading-relaxed"></div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="q-card p-4 rounded-xl bg-slate-50 border border-slate-200" id="q2-box">
+                        <p class="font-semibold text-slate-800 text-sm mb-3">
+                            ข้อที่ 2) หากวัดอุณหภูมิของน้ำได้ 50 องศาเซลเซียส (°C) จะเท่ากับกี่องศาฟาเรนไฮต์ (°F)?
+                        </p>
+                        <div class="space-y-2 text-xs sm:text-sm">
+                            <label class="flex items-center p-2.5 rounded-lg bg-white border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition-all">
+                                <input type="radio" name="q2" value="A" class="mr-2.5 text-blue-600">
+                                ก. 90 °F
+                            </label>
+                            <label class="flex items-center p-2.5 rounded-lg bg-white border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition-all">
+                                <input type="radio" name="q2" value="B" class="mr-2.5 text-blue-600">
+                                ข. 122 °F
+                            </label>
+                            <label class="flex items-center p-2.5 rounded-lg bg-white border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition-all">
+                                <input type="radio" name="q2" value="C" class="mr-2.5 text-blue-600">
+                                ค. 100 °F
+                            </label>
+                            <label class="flex items-center p-2.5 rounded-lg bg-white border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition-all">
+                                <input type="radio" name="q2" value="D" class="mr-2.5 text-blue-600">
+                                ง. 323 °F
+                            </label>
+                        </div>
+                        <div id="q2-feedback" class="mt-3 hidden p-3 rounded-lg text-xs leading-relaxed"></div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="q-card p-4 rounded-xl bg-slate-50 border border-slate-200" id="q3-box">
+                        <p class="font-semibold text-slate-800 text-sm mb-3">
+                            ข้อที่ 3) หน่วยวัดอุณหภูมิในระบบเอสไอ (SI Unit) ที่เป็นอุณหภูมิสัมบูรณ์คือหน่วยใด?
+                        </p>
+                        <div class="space-y-2 text-xs sm:text-sm">
+                            <label class="flex items-center p-2.5 rounded-lg bg-white border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition-all">
+                                <input type="radio" name="q3" value="A" class="mr-2.5 text-blue-600">
+                                ก. เซลเซียส (°C)
+                            </label>
+                            <label class="flex items-center p-2.5 rounded-lg bg-white border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition-all">
+                                <input type="radio" name="q3" value="B" class="mr-2.5 text-blue-600">
+                                ข. ฟาเรนไฮต์ (°F)
+                            </label>
+                            <label class="flex items-center p-2.5 rounded-lg bg-white border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition-all">
+                                <input type="radio" name="q3" value="C" class="mr-2.5 text-blue-600">
+                                ค. เคลวิน (K)
+                            </label>
+                            <label class="flex items-center p-2.5 rounded-lg bg-white border border-slate-200 hover:bg-blue-50/50 cursor-pointer transition-all">
+                                <input type="radio" name="q3" value="D" class="mr-2.5 text-blue-600">
+                                ง. โรเมอร์ (°R)
+                            </label>
+                        </div>
+                        <div id="q3-feedback" class="mt-3 hidden p-3 rounded-lg text-xs leading-relaxed"></div>
+                    </div>
+
+                </div>
+
+                <!-- Submit Button / Actions -->
+                <div class="mt-6 flex flex-wrap gap-4 items-center justify-between">
+                    <button id="submitQuizBtn" onclick="checkAnswers()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-check-circle"></i> ตรวจคำตอบและดูเฉลย
+                    </button>
+                    <button id="resetQuizBtn" onclick="resetQuiz()" class="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl transition-all text-sm hidden">
+                        <i class="fa-solid fa-rotate-right"></i> ทำแบบทดสอบอีกครั้ง
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-slate-400 py-6 text-center text-xs border-t border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 space-y-1">
+            <p>สื่อการเรียนรู้วิทยาศาสตร์ ม.1 — เรื่อง อุณหภูมิและการวัดอุณหภูมิ</p>
+            <p class="text-slate-500">พัฒนาขึ้นสำหรับการเรียนรู้เชิงรุก (Active Learning) ด้วยแบบจำลองอนุภาค Real-time Simulation</p>
+        </div>
+    </footer>
+
+    <!-- SCRIPT SECTION -->
+    <script>
+        // Global Simulation Variables
+        let tempCelsius = 25;
+        let heatFluxMultiplier = 1.0;
+        const NUM_PARTICLES = 80;
+        let particles = [];
+        let canvas, ctx;
+
+        // Initialize App
+        window.onload = function() {
+            canvas = document.getElementById('particleCanvas');
+            ctx = canvas.getContext('2d');
+
+            // Handle Resize
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            // Setup Particles
+            initParticles();
+
+            // Bind Control Listeners
+            document.getElementById('tempSlider').addEventListener('input', handleTempChange);
+            document.getElementById('heatSlider').addEventListener('input', handleHeatChange);
+
+            // Initial Calculations & UI Update
+            updateCalculations();
+
+            // Start Particle Animation Loop
+            requestAnimationFrame(animateParticles);
+        };
+
+        function resizeCanvas() {
+            if (!canvas) return;
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        }
+
+        // Particle Class definition
+        class Particle {
+            constructor(w, h) {
+                this.x = Math.random() * (w - 20) + 10;
+                this.y = Math.random() * (h - 20) + 10;
+                this.radius = 6;
+                // Random angle
+                this.angle = Math.random() * Math.PI * 2;
+                this.vx = Math.cos(this.angle);
+                this.vy = Math.sin(this.angle);
+            }
+
+            update(temp, flux, width, height) {
+                // Kinetic Energy / Speed factor based on Temperature in Celsius (-20 to 100)
+                // Kelvin equivalent speed (mapped smoothly for visual presentation)
+                let baseSpeed = Math.max(0.1, (temp + 30) / 25) * flux;
+
+                // State specific motion dynamics
+                if (temp <= 0) {
+                    // Solid State (Ice) - Vibration around fixed positions
+                    if (!this.anchorX) {
+                        this.anchorX = this.x;
+                        this.anchorY = Math.min(height - 15, Math.max(height - 120, this.y));
+                    }
+                    const vibAmp = Math.max(0.2, (temp + 20) / 20) * 1.5;
+                    this.x = this.anchorX + (Math.random() - 0.5) * vibAmp;
+                    this.y = this.anchorY + (Math.random() - 0.5) * vibAmp;
+                } else {
+                    // Liquid & Gas - Clear anchor if melted
+                    this.anchorX = null;
+                    this.anchorY = null;
+
+                    if (temp > 0 && temp < 100) {
+                        // Liquid State - Particles settle down due to gravity simulation
+                        this.vy += 0.08; // gravity
+                        
+                        this.x += this.vx * baseSpeed;
+                        this.y += this.vy * baseSpeed;
+
+                        // Damping bottom liquid layer
+                        const bottomBoundary = height - this.radius;
+                        if (this.y > bottomBoundary) {
+                            this.y = bottomBoundary;
+                            this.vy *= -0.5;
+                            this.vx += (Math.random() - 0.5) * 0.5; // lateral fluid movement
+                        }
+                    } else {
+                        // Gas State (Steam >= 100°C) - Fast, free expansion, fills whole container
+                        this.x += this.vx * baseSpeed * 1.4;
+                        this.y += this.vy * baseSpeed * 1.4;
+                    }
+
+                    // Wall Collisions
+                    if (this.x - this.radius < 0) {
+                        this.x = this.radius;
+                        this.vx *= -1;
+                    }
+                    if (this.x + this.radius > width) {
+                        this.x = width - this.radius;
+                        this.vx *= -1;
+                    }
+                    if (this.y - this.radius < 0) {
+                        this.y = this.radius;
+                        this.vy *= -1;
+                    }
+                    if (this.y + this.radius > height) {
+                        this.y = height - this.radius;
+                        this.vy *= -1;
+                    }
+                }
+            }
+
+            draw(ctx, temp) {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+
+                // Color based on temperature & state
+                if (temp <= 0) {
+                    // Ice Cyan/Light Blue
+                    ctx.fillStyle = '#67e8f9';
+                    ctx.shadowColor = '#06b6d4';
+                    ctx.shadowBlur = 4;
+                } else if (temp < 100) {
+                    // Liquid Water Blue
+                    ctx.fillStyle = '#38bdf8';
+                    ctx.shadowColor = '#0284c7';
+                    ctx.shadowBlur = 3;
+                } else {
+                    // Gas / Steam Warm Red/Orange Glow
+                    ctx.fillStyle = '#f87171';
+                    ctx.shadowColor = '#ef4444';
+                    ctx.shadowBlur = 8;
+                }
+
+                ctx.fill();
+                ctx.shadowBlur = 0; // Reset
+                ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                ctx.closePath();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const w = canvas.width || 400;
+            const h = canvas.height || 300;
+            for (let i = 0; i < NUM_PARTICLES; i++) {
+                particles.push(new Particle(w, h));
+            }
+        }
+
+        // Animation Loop
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw container subtle grid background
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.lineWidth = 1;
+            const gridSize = 20;
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+            }
+
+            // Update & Draw Particles
+            particles.forEach(p => {
+                p.update(tempCelsius, heatFluxMultiplier, canvas.width, canvas.height);
+                p.draw(ctx, tempCelsius);
+            });
+
+            requestAnimationFrame(animateParticles);
+        }
+
+        // Control Event Handlers
+        function handleTempChange(e) {
+            tempCelsius = parseFloat(e.target.value);
+            document.getElementById('tempValueDisplay').innerText = `${tempCelsius} °C`;
+            updateCalculations();
+        }
+
+        function handleHeatChange(e) {
+            heatFluxMultiplier = parseFloat(e.target.value);
+            document.getElementById('heatValueDisplay').innerText = `${heatFluxMultiplier.toFixed(1)}x`;
+            updateCalculations();
+        }
+
+        // Core Scientific Logic Updates
+        function updateCalculations() {
+            // Conversions
+            const C = tempCelsius;
+            const F = (C * 9 / 5) + 32;
+            const K = C + 273.15;
+            const R = C * 4 / 5;
+
+            // UI Multi-Unit Updates
+            document.getElementById('valC').innerText = `${C.toFixed(1)} °C`;
+            document.getElementById('valF').innerText = `${F.toFixed(1)} °F`;
+            document.getElementById('valK').innerText = `${K.toFixed(2)} K`;
+            document.getElementById('valR').innerText = `${R.toFixed(1)} °R`;
+
+            // Thermometer Fill Height Logic (-20°C to 100°C -> 0% to 100%)
+            const percent = Math.min(100, Math.max(2, ((C + 20) / 120) * 100));
+            const thermoLiquid = document.getElementById('thermoLiquid');
+            const thermoBulb = document.getElementById('thermoBulb');
+            const thermoLabel = document.getElementById('thermoLabel');
+
+            thermoLiquid.style.height = `${percent}%`;
+
+            // Change liquid color at freezing vs normal vs boiling
+            if (C <= 0) {
+                thermoLiquid.className = "w-full bg-gradient-to-t from-cyan-600 to-cyan-400 rounded-b-full transition-all duration-300";
+                thermoBulb.className = "absolute bottom-1 w-9 h-9 rounded-full bg-cyan-500 border-2 border-slate-300 shadow-md transition-colors duration-300";
+                thermoLabel.innerText = "สารทำงาน: โฮลด์แข็ง/เย็นจัด";
+                thermoLabel.className = "text-xs font-bold text-cyan-600 mt-2";
+            } else if (C >= 100) {
+                thermoLiquid.className = "w-full bg-gradient-to-t from-red-700 to-amber-500 rounded-b-full transition-all duration-300";
+                thermoBulb.className = "absolute bottom-1 w-9 h-9 rounded-full bg-red-600 border-2 border-slate-300 shadow-md transition-colors duration-300";
+                thermoLabel.innerText = "สารทำงาน: ร้อนจัด (ถึงจุดเดือด)";
+                thermoLabel.className = "text-xs font-bold text-red-600 mt-2";
+            } else {
+                thermoLiquid.className = "w-full bg-gradient-to-t from-red-600 to-red-400 rounded-b-full transition-all duration-300";
+                thermoBulb.className = "absolute bottom-1 w-9 h-9 rounded-full bg-red-600 border-2 border-slate-300 shadow-md transition-colors duration-300";
+                thermoLabel.innerText = "สารทำงาน: แอลกอฮอล์สีแดง";
+                thermoLabel.className = "text-xs font-bold text-red-600 mt-2";
+            }
+
+            // Kinetic Energy Calculation Display
+            // Ek ~ T (Kelvin)
+            const kineticEnergy = ((K / 300) * heatFluxMultiplier * 10).toFixed(1);
+            document.getElementById('kineticEnergyDisplay').innerText = kineticEnergy;
+
+            // State Badge & Scientific Explanations
+            const stateBadge = document.getElementById('stateBadge');
+            const expText = document.getElementById('explanationText');
+            const flameIcon = document.getElementById('flameIcon');
+            const heatStatusText = document.getElementById('heatStatusText');
+
+            if (C <= 0) {
+                stateBadge.innerText = "สถานะ: ของแข็ง (น้ำแข็ง - Ice)";
+                stateBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-cyan-100 text-cyan-800 border border-cyan-300";
+                expText.innerText = `ที่อุณหภูมิ ${C}°C (≤ 0°C) น้ำเปลี่ยนสถานะเป็นของแข็ง (น้ำแข็ง) อนุภาคเรียงตัวสั่นอยู่กับที่ มีแรงยึดเหนี่ยวระหว่างอนุภาคสูง พลังงานจลน์ต่ำสุด`;
+                flameIcon.className = "fa-solid fa-snowflake text-cyan-400 text-xl";
+                heatStatusText.innerText = "ความเย็นจัด (สั่นอยู่กับที่)";
+            } else if (C > 0 && C < 100) {
+                stateBadge.innerText = "สถานะ: ของเหลว (น้ำ - Liquid Water)";
+                stateBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-300";
+                expText.innerText = `ที่อุณหภูมิ ${C}°C (0°C - 100°C) น้ำเป็นของเหลว อนุภาคได้รับพลังงานความร้อนเพียงพอที่จะเคลื่อนที่ไหลข้ามกันไปมาได้ แต่ยังไม่หลุดออกจากกัน`;
+                flameIcon.className = "fa-solid fa-fire text-amber-500 text-xl";
+                heatStatusText.innerText = "พลังงานปานกลาง (เคลื่อนที่ไหล)";
+            } else {
+                stateBadge.innerText = "สถานะ: แก๊ส (ไอน้ำ - Steam)";
+                stateBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-800 border border-red-300";
+                expText.innerText = `ที่อุณหภูมิ ${C}°C (≥ 100°C) น้ำระเหย/เดือดกลายเป็นไอน้ำ อนุภาคมีพลังงานจลน์สูงมาก เคลื่อนที่ได้อย่างอิสระทุกทิศทางด้วยความเร็วสูง`;
+                flameIcon.className = "fa-solid fa-fire-flame-curved text-red-500 text-2xl animate-bounce";
+                heatStatusText.innerText = "พลังงานสูงมาก (ฟุ้งกระจาย)";
+            }
+        }
+
+        // QUIZ EVALUATION SYSTEM
+        const correctAnswers = {
+            q1: "C",
+            q2: "B",
+            q3: "C"
+        };
+
+        const explanations = {
+            q1: "เฉลย ค. ถูกต้อง! ตามทฤษฎีจลน์ของสาร เมื่อได้รับความร้อน อุณหภูมิจะสูงขึ้น ส่งผลให้อนุภาคมีพลังงานจลน์ (Kinetic Energy) เพิ่มขึ้น จึงเคลื่อนที่เร็วขึ้น",
+            q2: "เฉลย ข. ถูกต้อง! คำนวณจากสูตร °F = (°C × 9/5) + 32 → (50 × 9/5) + 32 = 90 + 32 = 122 °F",
+            q3: "เฉลย ค. ถูกต้อง! เคลวิน (Kelvin, K) เป็นหน่วยมาตรฐานสากล (SI Unit) สำหรับวัดอุณหภูมิทางวิทยาศาสตร์ โดยเริ่มจากศูนย์สัมบูรณ์ (Absolute Zero)"
+        };
+
+        function checkAnswers() {
+            let score = 0;
+            let total = 3;
+
+            for (let i = 1; i <= total; i++) {
+                const qName = `q${i}`;
+                const selected = document.querySelector(`input[name="${qName}"]:checked`);
+                const feedbackBox = document.getElementById(`${qName}-feedback`);
+                const qBox = document.getElementById(`${qName}-box`);
+
+                feedbackBox.classList.remove('hidden');
+
+                if (selected) {
+                    if (selected.value === correctAnswers[qName]) {
+                        score++;
+                        qBox.className = "q-card p-4 rounded-xl bg-emerald-50 border-2 border-emerald-400";
+                        feedbackBox.className = "mt-3 p-3 rounded-lg text-xs leading-relaxed bg-emerald-100 text-emerald-800 font-medium";
+                        feedbackBox.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> ${explanations[qName]}`;
+                    } else {
+                        qBox.className = "q-card p-4 rounded-xl bg-rose-50 border-2 border-rose-300";
+                        feedbackBox.className = "mt-3 p-3 rounded-lg text-xs leading-relaxed bg-rose-100 text-rose-800 font-medium";
+                        feedbackBox.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 mr-1"></i> ตอบผิด! ${explanations[qName]}`;
+                    }
+                } else {
+                    qBox.className = "q-card p-4 rounded-xl bg-amber-50 border-2 border-amber-300";
+                    feedbackBox.className = "mt-3 p-3 rounded-lg text-xs leading-relaxed bg-amber-100 text-amber-800 font-medium";
+                    feedbackBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1"></i> ยังไม่ได้เลือกคำตอบ! ${explanations[qName]}`;
+                }
+            }
+
+            // Display Score Badge
+            const scoreBadge = document.getElementById('quizScoreBadge');
+            const scoreVal = document.getElementById('scoreVal');
+            scoreVal.innerText = score;
+            scoreBadge.classList.remove('hidden');
+
+            // Toggle Buttons
+            document.getElementById('submitQuizBtn').classList.add('hidden');
+            document.getElementById('resetQuizBtn').classList.remove('hidden');
+        }
+
+        function resetQuiz() {
+            // Clear inputs
+            for (let i = 1; i <= 3; i++) {
+                const radios = document.getElementsByName(`q${i}`);
+                radios.forEach(r => r.checked = false);
+
+                const feedbackBox = document.getElementById(`q${i}-feedback`);
+                feedbackBox.classList.add('hidden');
+
+                const qBox = document.getElementById(`q${i}-box`);
+                qBox.className = "q-card p-4 rounded-xl bg-slate-50 border border-slate-200";
+            }
+
+            document.getElementById('quizScoreBadge').classList.add('hidden');
+            document.getElementById('submitQuizBtn').classList.remove('hidden');
+            document.getElementById('resetQuizBtn').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
